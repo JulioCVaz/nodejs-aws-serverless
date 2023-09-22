@@ -6,6 +6,9 @@ Create a structure per account and region for aws environment
 cdk deploy --all<br>
 To deploy all stacks
 
+cdk deploy --all<br>
+Clear all resources
+
 aws config<br>
 Configure aws cli
 
