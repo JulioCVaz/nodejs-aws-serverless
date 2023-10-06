@@ -45,7 +45,8 @@ export class ProductsAppStack extends cdk.Stack {
             environment: {
                 PRODUCTS_DDB: this.productsDdb.tableName
             },
-            layers: [productsLayer]
+            layers: [productsLayer],
+            tracing: lambda.Tracing.ACTIVE
         })
         // @note: add permission to lambda access table only with read permission
         this.productsDdb.grantReadData(this.productsFetchHandler)
@@ -63,7 +64,8 @@ export class ProductsAppStack extends cdk.Stack {
             environment: {
                 PRODUCTS_DDB: this.productsDdb.tableName
             },
-            layers: [productsLayer]
+            layers: [productsLayer],
+            tracing: lambda.Tracing.ACTIVE
         })
         // @note: add permission to lambda access table only with write permission
         this.productsDdb.grantWriteData(this.productsAdminHandler)
