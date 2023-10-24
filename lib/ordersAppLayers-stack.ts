@@ -3,7 +3,7 @@ import { Construct } from "constructs"
 import * as lambda from "aws-cdk-lib/aws-lambda"
 import * as ssm from "aws-cdk-lib/aws-ssm"
 
-export class OrdersAppLayers extends cdk.Stack {
+export class OrdersAppLayersStack extends cdk.Stack {
     constructor(scope: Construct, id: string, props?: cdk.StackProps) {
         super(scope, id, props)
         
