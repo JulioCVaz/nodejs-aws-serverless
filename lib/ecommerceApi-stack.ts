@@ -6,8 +6,9 @@ import * as cwlogs from "aws-cdk-lib/aws-logs"
 import { Construct } from "constructs"
 
 interface EcommerceApiStackProps extends cdk.StackProps {
-    productsFetchHandler: lambdaNodeJS.NodejsFunction
-    productsAdminHandler: lambdaNodeJS.NodejsFunction
+    productsFetchHandler: lambdaNodeJS.NodejsFunction;
+    productsAdminHandler: lambdaNodeJS.NodejsFunction;
+    ordersHandler: lambdaNodeJS.NodejsFunction;
 }
 
 export class EcommerceApiStack extends cdk.Stack {
@@ -35,9 +36,29 @@ export class EcommerceApiStack extends cdk.Stack {
             }
         })
 
+        this.createProductsService(props, api)
+        this.createOrdersService(props, api)
+    }
+
+    private createOrdersService(props: EcommerceApiStackProps, api: apigateway.RestApi) {
+        const ordersIntegration = new apigateway.LambdaIntegration(props.ordersHandler)
+        const ordersResource = api.root.addResource('orders')
+
+        // GET "/orders"
+        // GET "/orders?email=matilde@siecola.com.br"
+        // GET "/orders?email=matilde@siecola.com.br&orderId=123"
+        ordersResource.addMethod("GET", ordersIntegration)
+        // DELETE "/orders?email=matilde@siecola.com.br&orderId=123"
+        ordersResource.addMethod("DELETE", ordersIntegration)
+        // POST "/orders"
+        ordersResource.addMethod("POST", ordersIntegration)
+    }
+
+    private createProductsService(props: EcommerceApiStackProps, api: apigateway.RestApi) {
         const productsFetchIntegration = new apigateway.LambdaIntegration(props.productsFetchHandler)
-        // GET "/products"
         const productsResource = api.root.addResource("products")
+
+        // GET "/products"
         productsResource.addMethod("GET", productsFetchIntegration)
         // GET "/products/{id}"
         const productIdResource = productsResource.addResource("{id}")
