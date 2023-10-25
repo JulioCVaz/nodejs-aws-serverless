@@ -43,20 +43,20 @@ export async function handler(event: APIGatewayProxyEvent, context: Context): Pr
                         }
                     }
                 } else {
-                // GET all orders from an user
-                const orders = await orderRepository.getOrdersByEmail(email)
-                return {
-                    statusCode: 200,
-                    body: JSON.stringify(orders.map(convertToOrderResponse))
+                    // GET all orders from an user
+                    const orders = await orderRepository.getOrdersByEmail(email)
+                    return {
+                        statusCode: 200,
+                        body: JSON.stringify(orders.map(convertToOrderResponse))
+                    }
                 }
             }
-            } else {
-                // GET all orders
-                const orders = await orderRepository.getAllOrders()
-                return {
-                    statusCode: 200,
-                    body: JSON.stringify(orders.map(convertToOrderResponse))
-                }
+        } else {
+            // GET all orders
+            const orders = await orderRepository.getAllOrders()
+            return {
+                statusCode: 200,
+                body: JSON.stringify(orders.map(convertToOrderResponse))
             }
         }
     } else if (method === 'POST') {
