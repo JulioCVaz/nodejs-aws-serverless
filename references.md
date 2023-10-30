@@ -1,4 +1,4 @@
-##comands
+##commands
 
 cdk bootstrap<br>
 Create a structure per account and region for aws environment
@@ -14,3 +14,5 @@ Configure aws cli
 
 api gateway<br>
 https://bp0f0r8cph.execute-api.us-east-1.amazonaws.com/prod/
+
+cdk deploy --all --require-approval never<br>
