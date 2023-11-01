@@ -43,7 +43,10 @@ export class ProductsAppStack extends cdk.Stack {
 
         const productEventsDLQ = new sqs.Queue(this, "ProductEventsDLQ", {
             queueName: "product-events-dlq",
-            retentionPeriod: cdk.Duration.days(10)
+            retentionPeriod: cdk.Duration.days(10),
+            // @note only for development
+            enforceSSL: false,
+            encryption: sqs.QueueEncryption.UNENCRYPTED,
         })
 
         const productEventsHandler = new lambdaNodeJS.NodejsFunction(this, "ProductsEventsFunction", {
