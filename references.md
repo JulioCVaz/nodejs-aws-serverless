@@ -16,3 +16,8 @@ api gateway<br>
 https://bp0f0r8cph.execute-api.us-east-1.amazonaws.com/prod/
 
 cdk deploy --all --require-approval never<br>
+
+
+##nice to know
+
+- RCU(read) and WCU(write) capacity of table operations in database
