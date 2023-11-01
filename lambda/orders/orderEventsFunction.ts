@@ -14,7 +14,7 @@ const orderEventsRepository = new OrderEventRespository(ddbClient, eventsDdb)
 
 export async function handler(event: SNSEvent, context: Context): Promise<void> {
     const promises: Promise<PromiseResult<DynamoDB.DocumentClient.PutItemOutput, AWSError>>[] = []
-
+    // @note check alternatives to write in batch
     event.Records.forEach((record) => {
         promises.push(createEvent(record.Sns))
     })
