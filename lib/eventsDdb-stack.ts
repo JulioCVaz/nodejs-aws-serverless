@@ -20,33 +20,38 @@ export class EventsDdbStack extends cdk.Stack {
                 type: dynamodb.AttributeType.STRING,
             },
             timeToLiveAttribute: "ttl",
-            billingMode: dynamodb.BillingMode.PROVISIONED,
-            readCapacity: 1,
-            writeCapacity: 1
+            // NOTE: CHECK ##nice to know - on-demand mode
+            billingMode: dynamodb.BillingMode.PAY_PER_REQUEST
+            // provisioned mode
+            // billingMode: dynamodb.BillingMode.PROVISIONED,
+            // readCapacity: 1,
+            // writeCapacity: 1
         })
 
-        const readScale = this.table.autoScaleReadCapacity({
-            maxCapacity: 2,
-            minCapacity: 1
-        })
+        // NOTE: to enable provisioned configuration - RCU(read) and WCU(write) capacity of table operations in database
 
-        const duration = cdk.Duration.seconds(60)
+        // const readScale = this.table.autoScaleReadCapacity({
+        //     maxCapacity: 2,
+        //     minCapacity: 1
+        // })
 
-        readScale.scaleOnUtilization({
-            targetUtilizationPercent: 50,
-            scaleInCooldown: duration,
-            scaleOutCooldown: duration
-        })
+        // const duration = cdk.Duration.seconds(60)
 
-        const writeScale = this.table.autoScaleWriteCapacity({
-            maxCapacity: 4,
-            minCapacity: 1
-        })
+        // readScale.scaleOnUtilization({
+        //     targetUtilizationPercent: 50,
+        //     scaleInCooldown: duration,
+        //     scaleOutCooldown: duration
+        // })
 
-        writeScale.scaleOnUtilization({
-            targetUtilizationPercent: 30,
-            scaleInCooldown: duration,
-            scaleOutCooldown: duration
-        })
+        // const writeScale = this.table.autoScaleWriteCapacity({
+        //     maxCapacity: 4,
+        //     minCapacity: 1
+        // })
+
+        // writeScale.scaleOnUtilization({
+        //     targetUtilizationPercent: 30,
+        //     scaleInCooldown: duration,
+        //     scaleOutCooldown: duration
+        // })
     }
 }

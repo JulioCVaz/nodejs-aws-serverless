@@ -21,3 +21,5 @@ cdk deploy --all --require-approval never<br>
 ##nice to know
 
 - RCU(read) and WCU(write) capacity of table operations in database
+
+- To decide the best decision to choose between provisioned or on-demand, starts with on-demand to undestand your network traffec, after this, configure the best options to provisioned mode to control costs.
