@@ -28,6 +28,19 @@ export class EventsDdbStack extends cdk.Stack {
             // writeCapacity: 1
         })
 
+        this.table.addGlobalSecondaryIndex({
+            indexName: "emailIndex",
+            partitionKey: {
+                name: "email",
+                type: dynamodb.AttributeType.STRING
+            },
+            sortKey: {
+                name: "sk",
+                type: dynamodb.AttributeType.STRING
+            },
+            projectionType: dynamodb.ProjectionType.ALL
+        })
+
         // NOTE: to enable provisioned configuration - RCU(read) and WCU(write) capacity of table operations in database
 
         // const readScale = this.table.autoScaleReadCapacity({
