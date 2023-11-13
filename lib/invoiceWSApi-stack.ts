@@ -42,8 +42,52 @@ export class InvoiceWSApiStack extends cdk.Stack {
             ]
         })
         // websocket connection handler
+        const connectionHandler = new lambdaNodeJS.NodejsFunction(this, "InvoiceConnectionFunction", {
+            runtime: lambda.Runtime.NODEJS_16_X,
+            functionName: "InvoiceConnectionFunction", 
+            entry: "lambda/invoices/invoiceConnectionFunction.ts",
+            handler: "handler",
+            memorySize: 128,
+            timeout: cdk.Duration.seconds(2),
+            bundling: {
+              minify: true,
+              sourceMap: false
+            },
+            tracing: lambda.Tracing.ACTIVE
+        })
         // websocket disconnetion handler
+        const disconnetionHandler = new lambdaNodeJS.NodejsFunction(this, "InvoiceDisconnectionFunction", {
+            runtime: lambda.Runtime.NODEJS_16_X,
+            functionName: "InvoiceDisconnectionFunction", 
+            entry: "lambda/invoices/invoiceDisconnectionFunction.ts",
+            handler: "handler",
+            memorySize: 128,
+            timeout: cdk.Duration.seconds(2),
+            bundling: {
+              minify: true,
+              sourceMap: false
+            },
+            tracing: lambda.Tracing.ACTIVE
+        })
         // websocket API
+        const webSocketAPI = new apigatewayv2.WebSocketApi(this, "InvoiceWSApi", {
+            apiName: "InvoiceWSApi",
+            connectRouteOptions: {
+                integration: new apigatewayv2_integration.WebSocketLambdaIntegration("ConnectionHandler", connectionHandler)
+            },
+            disconnectRouteOptions: {
+                integration: new apigatewayv2_integration.WebSocketLambdaIntegration("DisconnectionHandler", disconnetionHandler)
+            }
+        })
+
+        const stage = "prod"
+        const wsApiEndpoint = `${webSocketAPI.apiEndpoint}/${stage}`
+        
+        new apigatewayv2.WebSocketStage(this, "InvoiceWSApiStage", {
+            webSocketApi: webSocketAPI,
+            stageName: stage,
+            autoDeploy: true
+        })
         // invoice URL handler
         // invoice import handler
         // cancel import handler
