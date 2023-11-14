@@ -1,6 +1,6 @@
 import * as cdk from "aws-cdk-lib"
 import * as apigatewayv2 from "@aws-cdk/aws-apigatewayv2-alpha"
-import * as apigatewayv2_integration from "@aws-cdk/aws-apigatewayv2-integrations-alpha"
+import * as apigatewayv2_integrations from "@aws-cdk/aws-apigatewayv2-integrations-alpha"
 import * as lambdaNodeJS from "aws-cdk-lib/aws-lambda-nodejs"
 import * as dynamodb from "aws-cdk-lib/aws-dynamodb"
 import * as lambda from "aws-cdk-lib/aws-lambda"
@@ -73,10 +73,10 @@ export class InvoiceWSApiStack extends cdk.Stack {
         const webSocketAPI = new apigatewayv2.WebSocketApi(this, "InvoiceWSApi", {
             apiName: "InvoiceWSApi",
             connectRouteOptions: {
-                integration: new apigatewayv2_integration.WebSocketLambdaIntegration("ConnectionHandler", connectionHandler)
+                integration: new apigatewayv2_integrations.WebSocketLambdaIntegration("ConnectionHandler", connectionHandler)
             },
             disconnectRouteOptions: {
-                integration: new apigatewayv2_integration.WebSocketLambdaIntegration("DisconnectionHandler", disconnetionHandler)
+                integration: new apigatewayv2_integrations.WebSocketLambdaIntegration("DisconnectionHandler", disconnetionHandler)
             }
         })
 
@@ -197,7 +197,20 @@ export class InvoiceWSApiStack extends cdk.Stack {
 
         cancelImportHandler.addToRolePolicy(invoicesDdbReadWriteTransactionPolicy)
         webSocketAPI.grantManageConnections(cancelImportHandler)
-        
+
         // websocket api routes
+        webSocketAPI.addRoute('getImportUrl', {
+            integration: new apigatewayv2_integrations.WebSocketLambdaIntegration(
+                "GetUrlHandler",
+                getUrlHandler
+            )
+        })
+
+        webSocketAPI.addRoute('cancelImport', {
+            integration: new apigatewayv2_integrations.WebSocketLambdaIntegration(
+                "CancelImportHandler",
+                cancelImportHandler
+            )
+        })
     }
 }
