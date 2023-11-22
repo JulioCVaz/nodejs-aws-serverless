@@ -70,7 +70,7 @@ export class InvoiceTransactionRepository {
                 ConditionExpression: 'attribute_exists(pk)',
                 UpdateExpression: 'set transactionStatus = :s',
                 ExpressionAttributeValues: {
-                    's': status
+                    ':s': status
                 }
             }).promise()
 
