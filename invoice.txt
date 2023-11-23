@@ -2,6 +2,6 @@
     "customerName": "mailte@siecola.com.br",
     "invoiceNumber": "ABC-123",
     "totalValue": 49,
-    "productId": "abc123",
+    "productId": "abc-123",
     "quantity": 2
 }
