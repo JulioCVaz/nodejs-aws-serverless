@@ -125,5 +125,19 @@ export class AuditEventBusStack extends cdk.Stack {
             threshold: 5,
             comparisonOperator: cw.ComparisonOperator.GREATER_THAN_OR_EQUAL_TO_THRESHOLD
         })
+
+        const ageOfMessagesMetric = invoiceImportTimeoutQueue.metricApproximateAgeOfOldestMessage({
+            period: cdk.Duration.minutes(2),
+            statistic: 'Maximum',
+            unit: cw.Unit.SECONDS
+        })
+
+        ageOfMessagesMetric.createAlarm(this, "AgeOfMessagesInQueue", {
+            alarmName: "AgeOfMessagesInQueue",
+            actionsEnabled: false,
+            evaluationPeriods: 1,
+            threshold: 60,
+            comparisonOperator: cw.ComparisonOperator.GREATER_THAN_OR_EQUAL_TO_THRESHOLD
+        })
     }
 }
