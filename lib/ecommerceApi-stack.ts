@@ -55,6 +55,18 @@ export class EcommerceApiStack extends cdk.Stack {
         })
         // @note attach a new iam policy to a previous created lambda function
         adminUserPolicy.attachToRole(<iam.Role> props.productsAdminHandler.role)
+        adminUserPolicy.attachToRole(<iam.Role> props.ordersHandler.role)
+
+        // @note attach permission to lambda order handler access customer poll
+        const customerUserPolicyStatement = new iam.PolicyStatement({
+            effect: iam.Effect.ALLOW,
+            actions: ["cognito-idp:AdminGetUser"],
+            resources: [this.adminPool.userPoolArn]
+        })
+        const customerUserPolicy = new iam.Policy(this, "CustomerUserPolicy", {
+            statements: [customerUserPolicyStatement]
+        })
+        customerUserPolicy.attachToRole(<iam.Role> props.ordersHandler.role)
 
         this.createProductsService(props, api)
         this.createOrdersService(props, api)
