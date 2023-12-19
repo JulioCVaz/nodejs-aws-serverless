@@ -1,14 +1,29 @@
-# Welcome to your CDK TypeScript project
 
-This is a blank project for CDK development with TypeScript.
+# AWS Serverless Ecommerce
 
-The `cdk.json` file tells the CDK Toolkit how to execute your app.
+This project was created following the course lessons [AWS Serverless with Typescript](https://siecola.com.br/courses/aws_lambda_serverless_nodejs_pt.html). In this course, a simple ecommerce system was developed with the functions of listing products, creating orders, sending emails, among others.
 
-## Useful commands
 
-* `npm run build`   compile typescript to js
-* `npm run watch`   watch for changes and compile
-* `npm run test`    perform the jest unit tests
-* `cdk deploy`      deploy this stack to your default AWS account/region
-* `cdk diff`        compare deployed stack with current state
-* `cdk synth`       emits the synthesized CloudFormation template
+## Architecture
+
+
+![Screenshot](.github/services-aws-architecture-hd.PNG)
+
+## Tech Stack
+
+- AWS Lambda
+- API Gateway REST
+- API Gateway WebSocket
+- DynamoDB
+- DynamoDB Stream
+- Simple Notification Service (SNS)
+- Simple Queue Service (SQS)
+- Simple Storage Service (S3)
+- CloudWatch
+- AWS Cognito
+- Simple Email Service (SES)
+- AWS EventBridge
+- AWS CodePipeline
+- AWS Identity and Access Management
+- AWS CDK
+- AWS X-Ray
