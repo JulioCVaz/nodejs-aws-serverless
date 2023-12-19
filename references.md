@@ -17,6 +17,8 @@ https://bp0f0r8cph.execute-api.us-east-1.amazonaws.com/prod/
 
 cdk deploy --all --require-approval never<br>
 
+cdk destroy --all<br>
+
 
 ##nice to know
 
