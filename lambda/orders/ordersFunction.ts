@@ -34,13 +34,15 @@ export async function handler(event: APIGatewayProxyEvent, context: Context): Pr
 
     console.log(`API Gateway RequestId: ${apiRequestId} - LambdaRequestId ${lambdaRequestId}`)
 
+    const isAdmin = authInfoService.isAdminUser(event.requestContext.authorizer)
+    const authenticatedUser = await authInfoService.getUserInfo(event.requestContext.authorizer)
+
     if (method === 'GET') {
         if (event.queryStringParameters) {
             const email = event.queryStringParameters!.email
             const orderId = event.queryStringParameters!.orderId
 
-            const isAdmin = authInfoService.isAdminUser(event.requestContext.authorizer)
-            const authenticatedUser = await authInfoService.getUserInfo(event.requestContext.authorizer)
+            
             
             if(isAdmin || email === authenticatedUser) {
                 if (email) {
@@ -77,7 +79,7 @@ export async function handler(event: APIGatewayProxyEvent, context: Context): Pr
             
         } else {
             // GET all orders
-            if (authInfoService.isAdminUser(event.requestContext.authorizer)) {
+            if (isAdmin) {
                const orders = await orderRepository.getAllOrders()
                 return {
                     statusCode: 200,
@@ -137,23 +139,29 @@ export async function handler(event: APIGatewayProxyEvent, context: Context): Pr
         const email = event.queryStringParameters!.email!
         const orderId = event.queryStringParameters!.orderId!
 
-        try {
-            const orderDeleted = await orderRepository.deleteOrder(email, orderId)
-
-            const eventResult = await sendOrderEvent(orderDeleted, OrderEventType.DELETED, lambdaRequestId)
-            console.log(`Order deleted event sent - OrderId: ${orderDeleted.sk} - MessageId: ${eventResult.MessageId}`)
-            return {
-                statusCode: 200,
-                body: JSON.stringify(convertToOrderResponse(orderDeleted))
+        if (isAdmin || email === authenticatedUser) {
+            try {
+                const orderDeleted = await orderRepository.deleteOrder(email, orderId)
+    
+                const eventResult = await sendOrderEvent(orderDeleted, OrderEventType.DELETED, lambdaRequestId)
+                console.log(`Order deleted event sent - OrderId: ${orderDeleted.sk} - MessageId: ${eventResult.MessageId}`)
+                return {
+                    statusCode: 200,
+                    body: JSON.stringify(convertToOrderResponse(orderDeleted))
+                }
+            } catch (error) {
+                console.log((<Error>error).message)
+                return {
+                    statusCode: 404,
+                    body: (<Error>error).message
+                }
             }
-        } catch (error) {
-            console.log((<Error>error).message)
+        } else {
             return {
-                statusCode: 404,
-                body: (<Error>error).message
+                statusCode: 403,
+                body: 'You dont have permission to perform this operation'
             }
-        }
-        
+        } 
     }
 
     return {
